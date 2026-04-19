@@ -1,0 +1,165 @@
+{
+    "@@locale": "en",
+    "appTitle": "Aou Online Academy",
+    "login": "Login",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "myLearning": "My Learning",
+    "logout": "Logout",
+    "noMaterials": "No courses assigned yet.",
+    "studentAccess": "Student Access",
+    "adminDashboard": "Admin Dashboard",
+    "manageMaterials": "Manage Courses",
+    "manageUsers": "Manage Users",
+    "manageContent": "Manage Content",
+    "users": "Users",
+    "materials": "Courses",
+    "addMaterial": "Add Course",
+    "addNewMaterial": "Add New Course",
+    "createCourseTitle": "Create New Course",
+    "addSubject": "Add Subject",
+    "subjectTitle": "Subject Title",
+    "addContent": "Add Content",
+    "addContentTo": "Add Content to {subject}",
+    "@addContentTo": {
+        "placeholders": {
+            "subject": {
+                "type": "String"
+            }
+        }
+    },
+    "createUserTitle": "Create New User",
+    "title": "Title",
+    "description": "Description",
+    "displayName": "Display Name",
+    "role": "Role",
+    "url": "URL",
+    "contentUrlMock": "Content URL (Mock Upload)",
+    "type": "Type",
+    "upload": "Upload",
+    "save": "Save",
+    "add": "Add",
+    "create": "Create",
+    "cancel": "Cancel",
+    "done": "Done",
+    "deleteConfirm": "Are you sure you want to delete this item?",
+    "delete": "Delete",
+    "edit": "Edit",
+    "success": "Success",
+    "error": "Error",
+    "required": "Required field",
+    "enterUsername": "Please enter username",
+    "enterPassword": "Please enter password",
+    "materialsAssigned": "Courses Assigned",
+    "secureLearningEnv": "Secure Learning Environment",
+    "secureLearningEnv": "Secure Learning Environment",
+    "assignTo": "Assign: {title}",
+    "@assignTo": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "noStudentsAvailable": "No students available to assign.",
+    "assignedToStudents": "Assigned to {count} students",
+    "@assignedToStudents": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "subjectsCount": "{count} Subjects",
+    "@subjectsCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "assignToStudentsTooltip": "Assign to Students",
+    "securePdfViewer": "Secure PDF Viewer",
+    "confidential": "CONFIDENTIAL",
+    "contentTypeVideo": "VIDEO",
+    "contentTypeAudio": "AUDIO",
+    "contentTypePdf": "PDF",
+    "roleAdmin": "ADMIN",
+    "roleStudent": "STUDENT",
+    "errorInvalidCredentials": "Invalid credentials",
+    "errorUserNotFound": "User not found",
+    "errorUsernameExists": "Username already exists",
+    "errorMaterialNotFound": "Course not found",
+    "errorUnknown": "Unknown error",
+    "errorDeviceMismatch": "You are logged in from an unauthorized device. Please use the registered device.",
+    "errorNetwork": "Network error. Please check your connection.",
+    "errorPermissionDenied": "Permission denied.",
+    "errorWeakPassword": "Password is too weak.",
+    "errorInvalidEmail": "Invalid email address.",
+    "errorSubjectNotFound": "Subject not found",
+    "errorContentNotFound": "Content not found",
+    "errorFieldRequired": "This field is required.",
+    "errorVideoLoad": "Failed to load video.",
+    "errorVideoInit": "Failed to initialize video player.",
+    "errorOperationFailed": "Operation failed. Please try again.",
+    "selectFile": "Select File",
+    "changeFile": "Change File",
+    "fileSelected": "Selected: {filename}",
+    "@fileSelected": {
+        "placeholders": {
+            "filename": {
+                "type": "String"
+            }
+        }
+    },
+    "noFileSelected": "No file selected",
+    "pleaseSelectFile": "Please select a file",
+    "uploadFileLabel": "Upload File",
+    "deleteUserTitle": "Delete User",
+    "deleteUserContent": "Are you sure you want to delete {name}?",
+    "@deleteUserContent": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "totalUsers": "Total Users",
+    "statStudents": "Students",
+    "statAdmins": "Admins",
+    "statMaterials": "Materials",
+    "editCourse": "Edit Course",
+    "deleteCourse": "Delete Course",
+    "deleteCourseConfirmation": "Are you sure you want to delete this course? This action cannot be undone.",
+    "update": "Update",
+    "editSubject": "Edit Subject",
+    "deleteSubject": "Delete Subject",
+    "deleteSubjectConfirmation": "Are you sure you want to delete this subject? All content inside it will also be deleted.",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "noResults": "No results found",
+    "userInfo": "User Information",
+    "welcomeBack": "Welcome back, {name}",
+    "@welcomeBack": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "deviceId": "Device ID",
+    "resetDevice": "Reset Device",
+    "resetDeviceBindingTitle": "Reset Device Binding",
+    "resetDeviceBindingContent": "Are you sure you want to reset the device binding for {name}? This will allow them to login from a new device.",
+    "@resetDeviceBindingContent": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "resetDeviceSuccess": "Device binding reset successfully"
+}
