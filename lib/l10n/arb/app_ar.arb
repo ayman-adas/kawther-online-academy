@@ -101,7 +101,7 @@
     "noResults": "لم يتم العثور على نتائج",
     "userInfo": "معلومات المستخدم",
     "welcomeBack": "مرحباً بك مجدداً، {name}",
-    "deviceId": "معرف الجهاز",
+    "deviceName": "اسم الجهاز",
     "resetDevice": "إعادة تعيين الجهاز",
     "resetDeviceBindingTitle": "إعادة تعيين ربط الجهاز",
     "resetDeviceBindingContent": "هل أنت متأكد أنك تريد إعادة تعيين ربط الجهاز لـ {name}؟ سيسمح لهم ذلك بتسجيل الدخول من جهاز جديد.",

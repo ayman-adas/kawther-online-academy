@@ -258,11 +258,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             _buildInfoRow(l10n.role, _getRoleName(user.role, l10n)),
             if (user.password != null)
               _buildInfoRow(l10n.password, user.password!),
-            _buildInfoRow(l10n.deviceId, user.deviceId ?? 'None'),
+            _buildInfoRow(l10n.deviceName, user.deviceName ?? 'None'),
           ],
         ),
         actions: [
-          if (user.deviceId != null)
+          if (user.deviceName != null)
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -296,7 +296,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             onPressed: () async {
               try {
                 await Provider.of<AdminProvider>(context, listen: false)
-                    .resetDeviceId(user.id);
+                    .resetDeviceName(user.id);
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(

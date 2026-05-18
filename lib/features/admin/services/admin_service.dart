@@ -46,9 +46,9 @@ class AdminService {
     return await _authService.deleteUser(uid, email, password);
   }
 
-  Future<void> resetDeviceId(String uid) async {
+  Future<void> resetDeviceName(String uid) async {
     await _firestore.collection('users').doc(uid).update({
-      'deviceId': FieldValue.delete(),
+      'deviceName': FieldValue.delete(),
     });
   }
 

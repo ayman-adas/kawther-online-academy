@@ -9,7 +9,7 @@ class User {
   final String displayName;
   final UserRole role;
   final String? profileImage;
-  final String? deviceId; // New field for device binding
+  final String? deviceName; // New field for device binding
   final String? password; // Admin-visible password (stored in Firestore)
   final String? email; // Stored email for admin reference
 
@@ -19,7 +19,7 @@ class User {
     required this.displayName,
     required this.role,
     this.profileImage,
-    this.deviceId,
+    this.deviceName,
     this.password,
     this.email,
   });
@@ -34,7 +34,7 @@ class User {
         orElse: () => UserRole.student,
       ),
       profileImage: json['profileImage'],
-      deviceId: json['deviceId'],
+      deviceName: json['deviceName'],
       password: json['password'],
       email: json['email'],
     );
@@ -47,7 +47,7 @@ class User {
       'displayName': displayName,
       'role': role.name,
       'profileImage': profileImage,
-      'deviceId': deviceId,
+      'deviceName': deviceName,
       'password': password,
       'email': email,
     };

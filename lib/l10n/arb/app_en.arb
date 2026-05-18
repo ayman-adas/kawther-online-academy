@@ -150,7 +150,7 @@
             }
         }
     },
-    "deviceId": "Device ID",
+    "deviceName": "Device Name",
     "resetDevice": "Reset Device",
     "resetDeviceBindingTitle": "Reset Device Binding",
     "resetDeviceBindingContent": "Are you sure you want to reset the device binding for {name}? This will allow them to login from a new device.",

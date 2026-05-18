@@ -97,11 +97,11 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-  Future<void> resetDeviceId(String uid) async {
+  Future<void> resetDeviceName(String uid) async {
     _isLoading = true;
     notifyListeners();
     try {
-      await _adminService.resetDeviceId(uid);
+      await _adminService.resetDeviceName(uid);
       await loadUsers();
     } catch (e) {
       _error = e.toString();

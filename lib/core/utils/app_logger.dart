@@ -49,30 +49,30 @@ class AppLogger {
       _log('🔐 AUTH', 'No active session found', tag: 'Auth');
 
   // ──────────────────────────────────────────────
-  // Device ID
+  // Device Name
   // ──────────────────────────────────────────────
 
   static void deviceIdResolved(String id, String source) =>
-      _log('📱 DEVICE', 'Device ID resolved  source=$source  id=$id',
-          tag: 'DeviceId');
+      _log('📱 DEVICE', 'Device Name resolved  source=$source  id=$id',
+          tag: 'DeviceName');
 
   static void deviceIdFallback(String reason) =>
-      _log('📱 DEVICE', 'Fallback to SharedPreferences — reason: $reason',
-          tag: 'DeviceId');
+      _log('📱 DEVICE', 'Fallback — reason: $reason',
+          tag: 'DeviceName');
 
-  static void deviceBindingNew(String uid, String deviceId) =>
-      _log('📱 DEVICE', 'First login — binding device to user uid=$uid  deviceId=$deviceId',
-          tag: 'DeviceId');
+  static void deviceBindingNew(String uid, String deviceName) =>
+      _log('📱 DEVICE', 'First login — binding device to user uid=$uid  deviceName=$deviceName',
+          tag: 'DeviceName');
 
   static void deviceBindingMatch(String uid) =>
-      _log('📱 DEVICE', 'Device match OK — uid=$uid', tag: 'DeviceId');
+      _log('📱 DEVICE', 'Device match OK — uid=$uid', tag: 'DeviceName');
 
   static void deviceBindingMismatch(String uid, String stored, String current) =>
       _log('📱 DEVICE',
           'Device MISMATCH — uid=$uid\n'
           '  stored : $stored\n'
           '  current: $current',
-          tag: 'DeviceId');
+          tag: 'DeviceName');
 
   // ──────────────────────────────────────────────
   // Firestore

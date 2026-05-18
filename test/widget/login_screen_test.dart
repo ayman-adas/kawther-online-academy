@@ -54,7 +54,7 @@ class MockAuthProvider extends ChangeNotifier implements AuthProvider {
 
   @override
   Future<void> registerUser(
-      String username, String displayName, UserRole role) async {}
+      String email, String password, String displayName, UserRole role) async {}
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

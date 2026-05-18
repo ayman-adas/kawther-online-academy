@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
 import '../models/user_model.dart';
 import '../../../core/utils/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,21 +50,21 @@ class AuthService {
 
       // --- Strict Device Binding Check ---
       try {
-        final currentDeviceId = await _getDeviceId();
-        if (currentDeviceId != null) {
-          if (user.deviceId == null) {
+        final currentDeviceName = await _getDeviceName();
+        if (currentDeviceName != null) {
+          if (user.deviceName == null) {
             // First time login - Bind device forever
-            AppLogger.deviceBindingNew(user.id, currentDeviceId);
+            AppLogger.deviceBindingNew(user.id, currentDeviceName);
             AppLogger.firestoreWrite(
-                'users', user.id, {'deviceId': currentDeviceId});
+                'users', user.id, {'deviceName': currentDeviceName});
             await _firestore.collection('users').doc(user.id).update({
-              'deviceId': currentDeviceId,
+              'deviceName': currentDeviceName,
             });
-            user = User.fromJson({...userData, 'deviceId': currentDeviceId},
+            user = User.fromJson({...userData, 'deviceName': currentDeviceName},
                 id: user.id);
-          } else if (user.deviceId != currentDeviceId) {
+          } else if (user.deviceName != currentDeviceName) {
             AppLogger.deviceBindingMismatch(
-                user.id, user.deviceId!, currentDeviceId);
+                user.id, user.deviceName!, currentDeviceName);
             await _firebaseAuth.signOut();
             throw Exception('errorDeviceMismatch');
           } else {
@@ -94,47 +94,28 @@ class AuthService {
     }
   }
 
-  static const _deviceIdChannel =
-      MethodChannel('com.aou.no_screenshot/device_id');
-
-  /// Returns a truly stable device identifier:
-  /// - Android: Settings.Secure.ANDROID_ID — stable per device+signing key,
-  ///            survives reinstall, only resets on factory reset.
-  /// - iOS: UUID stored in Keychain — survives app uninstall/reinstall.
-  /// - Other platforms: UUID persisted in SharedPreferences (best effort).
-  Future<String?> _getDeviceId() async {
+  /// Returns the generic device model/name using device_info_plus
+  Future<String?> _getDeviceName() async {
     try {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
-        final id = await _deviceIdChannel.invokeMethod<String>('getAndroidId');
-        if (id != null && id.isNotEmpty && id != '9774d56d682e549c') {
-          AppLogger.deviceIdResolved(id, 'Android ANDROID_ID');
-          return id;
-        }
-        AppLogger.deviceIdFallback('Android ID was null/empty/fake: $id');
+        final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        final name = androidInfo.model;
+        AppLogger.deviceIdResolved(name, 'Android Device Model');
+        return name;
       } else if (Platform.isIOS) {
-        final id =
-            await _deviceIdChannel.invokeMethod<String>('getIosDeviceId');
-        if (id != null && id.isNotEmpty) {
-          AppLogger.deviceIdResolved(id, 'iOS Keychain');
-          return id;
-        }
-        AppLogger.deviceIdFallback('iOS Keychain returned null/empty');
+        final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        final name = iosInfo.name;
+        AppLogger.deviceIdResolved(name, 'iOS Device Name');
+        return name;
+      } else {
+        // Fallback for other platforms
+        return 'Unknown Device';
       }
     } catch (e) {
-      AppLogger.deviceIdFallback('Native channel error: $e');
+      AppLogger.deviceIdFallback('Failed to get device info: $e');
+      return 'Unknown Device';
     }
-    // Fallback: SharedPreferences UUID
-    const key = 'stable_device_id';
-    final prefs = await SharedPreferences.getInstance();
-    String? deviceId = prefs.getString(key);
-    if (deviceId == null) {
-      deviceId = const Uuid().v4();
-      await prefs.setString(key, deviceId);
-      AppLogger.deviceIdResolved(deviceId, 'SharedPreferences UUID (new)');
-    } else {
-      AppLogger.deviceIdResolved(deviceId, 'SharedPreferences UUID (cached)');
-    }
-    return deviceId;
   }
 
   Future<void> logout() async {
@@ -155,12 +136,12 @@ class AuthService {
             await _firestore.collection('users').doc(firebaseUser.uid).get();
         if (doc.exists) {
           var user = User.fromJson(doc.data()!, id: doc.id);
-          final currentDeviceId = await _getDeviceId();
-          if (currentDeviceId != null &&
-              user.deviceId != null &&
-              user.deviceId != currentDeviceId) {
+          final currentDeviceName = await _getDeviceName();
+          if (currentDeviceName != null &&
+              user.deviceName != null &&
+              user.deviceName != currentDeviceName) {
             AppLogger.deviceBindingMismatch(
-                user.id, user.deviceId!, currentDeviceId);
+                user.id, user.deviceName!, currentDeviceName);
             await logout();
             throw Exception('errorDeviceMismatch');
           }
@@ -182,10 +163,10 @@ class AuthService {
       try {
         final cachedUser = User.fromJson(jsonDecode(userStr));
         // Still validate device even in offline mode
-        if (cachedUser.deviceId != null) {
-          final currentDeviceId = await _getDeviceId();
-          if (currentDeviceId != null &&
-              cachedUser.deviceId != currentDeviceId) {
+        if (cachedUser.deviceName != null) {
+          final currentDeviceName = await _getDeviceName();
+          if (currentDeviceName != null &&
+              cachedUser.deviceName != currentDeviceName) {
             await logout();
             throw Exception('errorDeviceMismatch');
           }
