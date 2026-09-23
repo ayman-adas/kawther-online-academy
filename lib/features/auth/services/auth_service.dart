@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 import '../models/user_model.dart';
 import '../../../core/utils/app_logger.dart';
@@ -48,34 +46,6 @@ class AuthService {
       final userData = doc.data()!;
       var user = User.fromJson(userData, id: doc.id);
 
-      // --- Strict Device Binding Check ---
-      try {
-        final currentDeviceName = await _getDeviceName();
-        if (currentDeviceName != null) {
-          if (user.deviceName == null) {
-            // First time login - Bind device forever
-            AppLogger.deviceBindingNew(user.id, currentDeviceName);
-            AppLogger.firestoreWrite(
-                'users', user.id, {'deviceName': currentDeviceName});
-            await _firestore.collection('users').doc(user.id).update({
-              'deviceName': currentDeviceName,
-            });
-            user = User.fromJson({...userData, 'deviceName': currentDeviceName},
-                id: user.id);
-          } else if (user.deviceName != currentDeviceName) {
-            AppLogger.deviceBindingMismatch(
-                user.id, user.deviceName!, currentDeviceName);
-            await _firebaseAuth.signOut();
-            throw Exception('errorDeviceMismatch');
-          } else {
-            AppLogger.deviceBindingMatch(user.id);
-          }
-        }
-      } catch (e) {
-        if (e.toString().contains('errorDeviceMismatch')) rethrow;
-        AppLogger.error('Device check failed', tag: 'DeviceId', exception: e);
-      }
-
       _currentUser = user;
       await _persistUser(_currentUser!);
       return _currentUser!;
@@ -88,35 +58,11 @@ class AuthService {
       }
       throw Exception('errorUnknown');
     } catch (e) {
-      if (e.toString().contains('errorDeviceMismatch')) rethrow;
       AppLogger.error('Login failed', tag: 'Auth', exception: e);
       throw Exception('errorUnknown');
     }
   }
 
-  /// Returns the generic device model/name using device_info_plus
-  Future<String?> _getDeviceName() async {
-    try {
-      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
-        final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        final name = androidInfo.model;
-        AppLogger.deviceIdResolved(name, 'Android Device Model');
-        return name;
-      } else if (Platform.isIOS) {
-        final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        final name = iosInfo.name;
-        AppLogger.deviceIdResolved(name, 'iOS Device Name');
-        return name;
-      } else {
-        // Fallback for other platforms
-        return 'Unknown Device';
-      }
-    } catch (e) {
-      AppLogger.deviceIdFallback('Failed to get device info: $e');
-      return 'Unknown Device';
-    }
-  }
 
   Future<void> logout() async {
     AppLogger.authSignOut();
@@ -136,21 +82,11 @@ class AuthService {
             await _firestore.collection('users').doc(firebaseUser.uid).get();
         if (doc.exists) {
           var user = User.fromJson(doc.data()!, id: doc.id);
-          final currentDeviceName = await _getDeviceName();
-          if (currentDeviceName != null &&
-              user.deviceName != null &&
-              user.deviceName != currentDeviceName) {
-            AppLogger.deviceBindingMismatch(
-                user.id, user.deviceName!, currentDeviceName);
-            await logout();
-            throw Exception('errorDeviceMismatch');
-          }
           AppLogger.sessionRestored(user.id);
           _currentUser = user;
           return _currentUser;
         }
       } catch (e) {
-        if (e.toString().contains('errorDeviceMismatch')) rethrow;
         AppLogger.warning('Firestore offline — falling back to cache',
             tag: 'Auth');
       }
@@ -162,19 +98,9 @@ class AuthService {
     if (userStr != null) {
       try {
         final cachedUser = User.fromJson(jsonDecode(userStr));
-        // Still validate device even in offline mode
-        if (cachedUser.deviceName != null) {
-          final currentDeviceName = await _getDeviceName();
-          if (currentDeviceName != null &&
-              cachedUser.deviceName != currentDeviceName) {
-            await logout();
-            throw Exception('errorDeviceMismatch');
-          }
-        }
         _currentUser = cachedUser;
         return _currentUser;
       } catch (e) {
-        if (e.toString().contains('errorDeviceMismatch')) rethrow;
         return null;
       }
     }
@@ -385,5 +311,46 @@ class AuthService {
       'admins': admins,
       'materials': materialSnapshot.size,
     };
+  }
+
+  // Public Student Registration
+  Future<User> register(String email, String password, String displayName) async {
+    try {
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (credential.user == null) {
+        throw Exception('errorUnknown');
+      }
+
+      final uid = credential.user!.uid;
+
+      final newUser = User(
+        id: uid,
+        username: email.split('@')[0],
+        displayName: displayName,
+        role: UserRole.student,
+        password: password, // Store password
+        email: email,
+      );
+
+      await _firestore
+          .collection('users')
+          .doc(newUser.id)
+          .set(newUser.toJson());
+
+      _currentUser = newUser;
+      await _persistUser(_currentUser!);
+      return _currentUser!;
+    } on auth.FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw Exception('errorUsernameExists');
+      }
+      throw Exception('errorUnknown');
+    } catch (e) {
+      throw Exception('errorUnknown');
+    }
   }
 }

@@ -105,5 +105,10 @@
     "resetDevice": "إعادة تعيين الجهاز",
     "resetDeviceBindingTitle": "إعادة تعيين ربط الجهاز",
     "resetDeviceBindingContent": "هل أنت متأكد أنك تريد إعادة تعيين ربط الجهاز لـ {name}؟ سيسمح لهم ذلك بتسجيل الدخول من جهاز جديد.",
-    "resetDeviceSuccess": "تمت إعادة تعيين ربط الجهاز بنجاح"
+    "resetDeviceSuccess": "تمت إعادة تعيين ربط الجهاز بنجاح",
+    "register": "إنشاء حساب جديد",
+    "registrationClosedTitle": "تنبيه التسجيل",
+    "registrationClosedMessage": "يجب تسجيل الحساب عن طريق الإدارة. يرجى التواصل مع الإدارة لإنشاء حسابك.",
+    "studentRegistrationTitle": "تسجيل طالب جديد",
+    "registerSuccess": "تم تسجيل الحساب بنجاح!"
 }

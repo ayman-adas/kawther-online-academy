@@ -161,5 +161,10 @@
             }
         }
     },
-    "resetDeviceSuccess": "Device binding reset successfully"
+    "resetDeviceSuccess": "Device binding reset successfully",
+    "register": "Register",
+    "registrationClosedTitle": "Registration Notice",
+    "registrationClosedMessage": "Account registration must be done through the administrator. Please contact us to create your account.",
+    "studentRegistrationTitle": "Student Registration",
+    "registerSuccess": "Registration successful!"
 }

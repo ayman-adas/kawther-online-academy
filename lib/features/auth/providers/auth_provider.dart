@@ -59,6 +59,22 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> registerStudent(String email, String password, String displayName) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _currentUser = await _authService.register(email, password, displayName);
+    } catch (e) {
+      _error = e.toString();
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // Admin Methods via Provider
   Future<void> registerUser(String username, String password,
       String displayName, UserRole role) async {

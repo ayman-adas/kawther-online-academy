@@ -258,60 +258,12 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             _buildInfoRow(l10n.role, _getRoleName(user.role, l10n)),
             if (user.password != null)
               _buildInfoRow(l10n.password, user.password!),
-            _buildInfoRow(l10n.deviceName, user.deviceName ?? 'None'),
           ],
         ),
         actions: [
-          if (user.deviceName != null)
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _confirmResetDevice(user);
-              },
-              child: Text(l10n.resetDevice,
-                  style: const TextStyle(color: Colors.orange)),
-            ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(l10n.done),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _confirmResetDevice(User user) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.resetDeviceBindingTitle),
-        content: Text(l10n.resetDeviceBindingContent(user.displayName)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () async {
-              try {
-                await Provider.of<AdminProvider>(context, listen: false)
-                    .resetDeviceName(user.id);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.resetDeviceSuccess)),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  AppErrorHandler.showErrorToast(context, e);
-                }
-              }
-            },
-            child: Text(l10n.resetDevice,
-                style: const TextStyle(color: Colors.orange)),
           ),
         ],
       ),

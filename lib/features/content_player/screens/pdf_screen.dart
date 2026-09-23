@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:screen_protector/screen_protector.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import '../../../../core/widgets/watermark_overlay.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class PdfScreen extends StatefulWidget {
